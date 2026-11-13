@@ -1,18 +1,3 @@
-"""Recompute the Table S17A counts for all 12 settings.
-
-Parameters come from the locked values in ``analysis/core.py`` (CONFIG) and the
-predictions come from the released files, so no parameter is read from the
-workbook. Only the expected counts are read, from the all-components-on cell
-(config ``11111``) of S17A; the check therefore does not verify the table
-against itself.
-
-Run from the repository root:
-
-    python evaluation/verify.py
-
-Writes ``evaluation/verification.csv`` with the observed and expected counts for
-the high-score tier, the low-score group, and the positives left in that group.
-"""
 
 import argparse
 import csv
@@ -25,15 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "analysis"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import core  # noqa: E402
-from decision_rules import audit_gates  # noqa: E402
+import core
+from decision_rules import audit_gates
 
 S17_SHEET = "S17_Abstention_Overlap"
 ALL_ON = "11111"
 
 
 def read_s17a(path):
-    """Expected counts for the all-components-on cell, keyed by setting."""
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
     if S17_SHEET not in wb.sheetnames:
         raise SystemExit(f"{path} has no sheet {S17_SHEET!r}")
@@ -59,7 +43,6 @@ def read_s17a(path):
 
 
 def replay(key):
-    """High-score tier, low-score group, and low-score positives under the full protocol."""
     data = core.load_setting(key)
     setting = data["setting"]
     test = data["test"]

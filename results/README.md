@@ -23,20 +23,20 @@ model eligibility, negative controls, and leakage checks
 
 Figure source data:
 
-- `figure_data/` — frozen tables behind Figures 2–5, with a figure-to-data map
-  in `figure_data/README.md`. The plotting scripts are not distributed.
+- `figuredata/` — frozen tables behind Figures 2–5, with a figure-to-data map
+  in `figuredata/README.md`. The plotting scripts are not distributed.
 
 Cross-domain summary files:
 
-- `tox21_nrar_triage_summary.csv` — NR-AR triage counts and low-score tier
+- `tox21nrartriagesummary.csv` — NR-AR triage counts and low-score tier
   (scaffold and cluster-out splits, HistGB and ExtraTrees).
-- `tox21_nrer_triage_summary.csv` — NR-ER equivalents.
-- `task1_ranking.csv`, `task2_probability_reliability.csv`,
-  `task3_decision_utility.csv` — NASA MDP cross-project results.
+- `tox21nrertriagesummary.csv` — NR-ER equivalents.
+- `task1ranking.csv`, `task2probabilityreliability.csv`,
+  `task3decisionutility.csv` — NASA MDP cross-project results.
 
 Frozen predictions:
 
-- `predictions/prediction_scores_388.csv` — calibrated scores, labels, locked
+- `predictions/predictionscores388.csv` — calibrated scores, labels, locked
   thresholds, triage categories, and uncertainty fields for the 388-compound
   external cohort and the scaffold, temporal, and cluster-out settings.
-  `code/reproduce_main_tables.py` recomputes Tables 1-4 from this file.
+  `code/reproducemaintables.py` recomputes Tables 1-4 from this file.

@@ -3,8 +3,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
-PREDICTIONS = ROOT / 'results' / 'predictions' / 'prediction_scores_388.csv'
-THRESHOLDS = ROOT / 'tables_archive' / 'low_risk_threshold.csv'
+PREDICTIONS = ROOT / 'results' / 'predictions' / 'predictionscores388.csv'
+THRESHOLDS = ROOT / 'tablesarchive' / 'lowriskthreshold.csv'
 SUMMARY = ROOT / 'results' / 'recomputed_triage.csv'
 SPLITS = ['scaffold', 'external_dilist', 'temporal', 'cluster_out']
 HIGH_LABEL = 'High-score high-risk'

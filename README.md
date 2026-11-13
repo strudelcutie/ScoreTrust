@@ -11,14 +11,14 @@ decisions — ranking candidates, estimating risk, and excluding low-score cases
 ```
 code/dili/          DILI pipeline (splits, features, models, calibration, evaluation, decisions) and configuration files
 code/literature/    literature-model adaptation and reproduction scripts (S1)
-code/tox21_nrar/    Tox21 NR-AR validation pipeline (01-09)
-code/tox21_nrer/    Tox21 NR-ER validation pipeline (01-09)
+code/tox21nrar/    Tox21 NR-AR validation pipeline (01-09)
+code/tox21nrer/    Tox21 NR-ER validation pipeline (01-09)
 code/nasa/          NASA MDP cross-domain pipeline (00-13)
 data/dili/          curated labels, compound master, and split assignments
 data/tox21/         Tox21 raw assay table (NR-AR, NR-ER, and other endpoints)
 data/nasa/          KC1, PC1, JM1, and KC2 ARFF files
 results/            final supplementary tables, figure source data, and cross-domain summaries
-tables_archive/     detailed source records moved out of the supplement
+tablesarchive/     detailed source records moved out of the supplement
 analysis/           revision analyses for the three review points (see analysis/README.md)
 evaluation/         decision-rule audit of Table S17A (see evaluation/README.md)
 ```
@@ -45,7 +45,7 @@ regenerate every number reported in the revised manuscript. See
 Curated extracts used in the analysis are included. Raw FDA label downloads and
 third-party repository mirrors are not redistributed; they can be regenerated
 from the sources above.
-The external split file in data/dili/dilist_strict_dilirank2_nonoverlap_external_split.csv lists 399 candidates before the small-molecule eligibility filter; the final 388-compound cohort applies that filter (Supplementary Table S15).
+The external split file in data/dili/diliststrictdilirank2nonoverlapexternalsplit.csv lists 399 candidates before the small-molecule eligibility filter; the final 388-compound cohort applies that filter (Supplementary Table S15).
 
 ## Environment
 
@@ -60,8 +60,8 @@ model repositories.
 ## What can be reproduced
 
 1. Recompute the main-text DILI tables. Run
-   python code/reproduce_main_tables.py
-   This reads `results/predictions/prediction_scores_388.csv` 
+   python code/reproducemaintables.py
+   This reads `results/predictions/predictionscores388.csv` 
    (calibrated scores for the 388-compound external cohort and the three internal
    settings) and recomputes Table 1 (AUROC, AUPRC, Brier, BSS), Table 2 (bias,
    null Brier, ECE, calibration intercept and slope), Table 3 (conformal coverage
@@ -75,7 +75,7 @@ model repositories.
   `results/Data S1.xlsx`; the cross-domain summaries are
   provided as CSV files in `results/`, and detailed source records (cohort
   construction, feature importance, label-definition mapping, threshold
-  sensitivity, split attribution, and training log) are in `tables_archive/`.
+  sensitivity, split attribution, and training log) are in `tablesarchive/`.
 3. Check the audit. `python evaluation/verify.py` replays the full decision
    protocol for all 12 settings. The locked parameters are read from
    `analysis/core.py` (CONFIG) and the scores from the released predictions;
@@ -87,19 +87,19 @@ model repositories.
    splits, generate the 2,427-feature block with RDKit, train HistGB/ExtraTrees,
    fit calibration, and evaluate under the locked protocol.
 5. Re-run decision and triage analyses. `triage.py` recomputes the three-group triage used in the manuscript
-   (122 high-score, 56 low-score, 604 no-call) from the predictions; `screening_simulation.py` reads
+   (122 high-score, 56 low-score, 604 no-call) from the predictions; `screeningsimulation.py` reads
    calibrated predictions and produces the screening tables.
-6. Re-run cross-domain validation. `code/tox21_nrar/`, `code/tox21_nrer/`,
+6. Re-run cross-domain validation. `code/tox21nrar/`, `code/tox21nrer/`,
    and `code/nasa/` reproduce the Tox21 and NASA analyses from the included raw
    data. The corresponding per-sample calibrated scores, conformal sets, OOD
    flags and locked thresholds are included under
-   `results/predictions/cross_domain/`.
+   `results/predictions/crossdomain/`.
 
 ## Reproduction levels
 
-1. Recompute reported metrics from the released predictions (`code/reproduce_main_tables.py`, `code/dili/triage.py`, `analysis/`, `evaluation/`; steps 1–3 and 5 above). The decision parameters are published constants: re-derived from the validation partitions, the conformal quantile reproduces the locked value to within 0.003, both decision thresholds reproduce it exactly, and the uncertainty cutoff to four decimals.
-2. Rebuild features and retrain models from the included curated inputs (`code/dili/`, `code/tox21_*`, `code/nasa/`; steps 4 and 6 above).
-3. Rebuild inputs from public sources; raw downloads are not redistributed, and the retrieval and curation records are in `tables_archive/` and Supplementary Table S15.
+1. Recompute reported metrics from the released predictions (`code/reproducemaintables.py`, `code/dili/triage.py`, `analysis/`, `evaluation/`; steps 1–3 and 5 above). The decision parameters are published constants: re-derived from the validation partitions, the conformal quantile reproduces the locked value to within 0.003, both decision thresholds reproduce it exactly, and the uncertainty cutoff to four decimals.
+2. Rebuild features and retrain models from the included curated inputs (`code/dili/`, `code/tox21*`, `code/nasa/`; steps 4 and 6 above).
+3. Rebuild inputs from public sources; raw downloads are not redistributed, and the retrieval and curation records are in `tablesarchive/` and Supplementary Table S15.
 
 ## Traceability
 
@@ -113,7 +113,7 @@ model repositories.
 | Thresholds | validation partitions |
 | Predictions | released CSV | results/predictions |
 
-The ablation script (`code/dili/ablation.py`) and the literature-model scripts (`code/literature/`) are included, but they require the regenerated feature matrices and, for the literature models, the original repositories. The label-definition sensitivity (Most-DILI versus No-DILI, Less-DILI removed) can be rerun with `code/dili/label_sensitivity.py`; the recorded run is in `tables_archive/label_sensitivity_recorded.csv`. The script reproduces the direction of the result (AUROC 0.665/0.703/0.768 versus 0.669/0.702/0.753 recorded).
+The ablation script (`code/dili/ablation.py`) and the literature-model scripts (`code/literature/`) are included, but they require the regenerated feature matrices and, for the literature models, the original repositories. The label-definition sensitivity (Most-DILI versus No-DILI, Less-DILI removed) can be rerun with `code/dili/labelsensitivity.py`; the recorded run is in `tablesarchive/labelsensitivityrecorded.csv`. The script reproduces the direction of the result (AUROC 0.665/0.703/0.768 versus 0.669/0.702/0.753 recorded).
 
 The scripts were written for the study's working tree (`data/`, `features/`,
 `results/` at the repository root) and are provided as analysis records. Paths
@@ -127,7 +127,7 @@ scikit-learn, and BLAS versions.
 ## Figures
 
 The tables from which Figures 2–5 were plotted are in
-`results/figure_data/`. `Figure_5_source.csv` is the assembled per-setting
+`results/figuredata/`. `Figure5source.csv` is the assembled per-setting
 matrix plotted in Figure 5 (AUROC, BSS, calibration slope, and low-score
 enrichment for all 12 settings); `dili/`, `tox21/`, and `nasa/` hold the
 underlying metric, conformal, prediction, and triage tables. Figure files

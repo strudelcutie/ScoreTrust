@@ -1,4 +1,4 @@
-`decision_rules.py` audits two abstention rules built on one calibrated probability.
+`decisionrules.py` audits two abstention rules built on one calibrated probability.
 
 Inputs: `p` (array), `qhat`, `U80`, `th_spec95`, `th_sens95`, and optionally the labels `y`.
 Outputs: `p_star`, conformal and uncertainty edges, gate label, `tier_untouched_sufficient`, and, when `p` is given, the counts `n_high`, `n_high_removed`, `n_high_retained`, `n_low`, `n_low_positive` and `n_abstained`.
@@ -26,5 +26,5 @@ Writes `evaluation/verification.csv` with observed and expected counts for the
 high-score tier, the low-score group, and the positives left in that group, and
 prints `12/12 PASS`. `--data-s1` and `--out` override the default paths.
 
-`locked_parameters.csv` lists the same locked values as `analysis/core.py` (CONFIG),
+`lockedparameters.csv` lists the same locked values as `analysis/core.py` (CONFIG),
 for readers who want the table without running Python.

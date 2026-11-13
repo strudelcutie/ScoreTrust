@@ -7,24 +7,24 @@ Every path resolves inside this repository; nothing outside it is read.
 
 ```
 pip install pandas numpy scikit-learn
-python run_checks.py
-python run_problem1.py
-python run_problem2.py
-python run_problem3.py
-python run_problem3_supp.py
+python runchecks.py
+python runproblem1.py
+python runproblem2.py
+python runproblem3.py
+python runproblem3supp.py
 ```
 
-Outputs are written to `analysis/output_tables/`, overwriting the committed copies.
+Outputs are written to `analysis/outputtables/`, overwriting the committed copies.
 
 ## Inputs
 
 | File | Source |
 |---|---|
-| `analysis/inputs/dili_validation/*_locked_calibrated_predictions.csv` | calibration predictions on the DILI validation partitions |
-| `results/figure_data/dili/canonical/predictions/histgb_predictions.csv` | DILI held-out test predictions |
-| `results/predictions/prediction_scores_388.csv` | out-of-domain flags for the DILI cohorts |
-| `results/predictions/cross_domain/tox21_*/predictions/` | Tox21 test, validation and applicability-domain files |
-| `results/predictions/cross_domain/nasa/predictions/` | NASA test, validation and applicability-domain files |
+| `analysis/inputs/dilivalidation/*HistGBlockedcalibratedpredictions.csv` | calibration predictions on the DILI validation partitions |
+| `results/figuredata/dili/canonical/predictions/histgbpredictions.csv` | DILI held-out test predictions |
+| `results/predictions/predictionscores388.csv` | out-of-domain flags for the DILI cohorts |
+| `results/predictions/crossdomain/tox21*/predictions/` | Tox21 test, validation and applicability-domain files |
+| `results/predictions/crossdomain/nasa/predictions/` | NASA test, validation and applicability-domain files |
 
 The published locked parameters for all 12 settings are constants in `core.CONFIG`,
 so no external threshold tables are needed.
@@ -38,13 +38,13 @@ so no external threshold tables are needed.
 
 | Script | Question | Tables |
 |---|---|---|
-| `run_checks.py` | do the locked parameters reproduce from the validation partitions? | `parameter_reproduction.csv` |
-| `run_problem1.py` | which low-score groups justify exclusion under prespecified criteria? | `Table5_revised_eligibility.csv`, `S8D_eligibility_sensitivity_grid.csv` |
-| `run_problem2.py` | does separating the calibrator from the conformal quantile change coverage? | `S7A_conformal_validation_separation.csv`, `S7B_split_repeat_distribution.csv` |
-| `run_problem3.py` | what does each protocol component contribute? | `S17A` to `S17D` |
-| `run_problem3_supp.py` | what does each added component buy? | `S17E`, `S17F` |
+| `runchecks.py` | do the locked parameters reproduce from the validation partitions? | `parameterreproduction.csv` |
+| `runproblem1.py` | which low-score groups justify exclusion under prespecified criteria? | `Table5revisedeligibility.csv`, `S8Deligibilitysensitivitygrid.csv` |
+| `runproblem2.py` | does separating the calibrator from the conformal quantile change coverage? | `S7Aconformalvalidationseparation.csv`, `S7Bsplitrepeatdistribution.csv` |
+| `runproblem3.py` | what does each protocol component contribute? | `S17A` to `S17D` |
+| `runproblem3supp.py` | what does each added component buy? | `S17E`, `S17F` |
 
-## Pairing rule in `run_problem2.py`
+## Pairing rule in `runproblem2.py`
 
 Each estimator pairs its quantile with a matching test calibration:
 
@@ -58,11 +58,11 @@ Each estimator pairs its quantile with a matching test calibration:
 
 ## Reproduction check
 
-`run_checks.py` rebuilds the quantile, both thresholds and the uncertainty cutoff from
+`runchecks.py` rebuilds the quantile, both thresholds and the uncertainty cutoff from
 each validation partition and compares them with `core.CONFIG`. The reconstructed
 quantile matches the published value to within 0.003, the specificity and sensitivity
 thresholds reproduce the published values exactly, and the uncertainty cutoff matches
-to four decimals, in all 12 settings. `run_problem3.py` uses the locked parameters for
+to four decimals, in all 12 settings. `runproblem3.py` uses the locked parameters for
 the calibrated cells and re-derives them only for the uncalibrated ones, so the
 all-components-on cell of `S17A` reproduces the high-score and low-score counts of
 Table 5 in the main text.

@@ -8,12 +8,12 @@ import pandas as pd
 from sklearn.metrics import roc_curve
 REPO = Path(__file__).resolve().parents[1]
 DATA = Path(os.environ.get('DILITRUST_DATA', REPO)).resolve()
-DILI_VALID_DIR = DATA / 'analysis' / 'inputs' / 'dili_validation'
-DILI_TEST = DATA / 'results' / 'predictions' / 'prediction_scores_388.csv'
-RELEASE_DILI = DATA / 'results' / 'figure_data' / 'dili' / 'canonical' / 'predictions' / 'histgb_predictions.csv'
-CROSS = DATA / 'results' / 'predictions' / 'cross_domain'
+DILI_VALID_DIR = DATA / 'analysis' / 'inputs' / 'dilivalidation'
+DILI_TEST = DATA / 'results' / 'predictions' / 'predictionscores388.csv'
+RELEASE_DILI = DATA / 'results' / 'figuredata' / 'dili' / 'canonical' / 'predictions' / 'histgbpredictions.csv'
+CROSS = DATA / 'results' / 'predictions' / 'crossdomain'
 NASA_PRED = CROSS / 'nasa'
-OUT = Path(os.environ.get('DILITRUST_OUT', REPO / 'analysis' / 'output_tables')).resolve()
+OUT = Path(os.environ.get('DILITRUST_OUT', REPO / 'analysis' / 'outputtables')).resolve()
 TABLES = OUT
 INTER = OUT
 OUT.mkdir(parents=True, exist_ok=True)
@@ -36,13 +36,13 @@ class Setting:
 CONFIG: dict[str, Setting] = {}
 for key, label, th_spec, th_sens, u80, qhat in [('dili_scaffold', 'DILI scaffold', 0.828, 0.4273, 1.082826, 0.7328), ('dili_external', 'DILI external', 0.828, 0.4273, 1.082826, 0.7328), ('dili_temporal', 'DILI temporal', 0.8313, 0.4015, 1.088796, 0.7281), ('dili_cluster', 'DILI cluster-out', 0.7953, 0.262, 1.077283, 0.694)]:
     valid_split = 'scaffold' if key == 'dili_external' else {'dili_scaffold': 'scaffold', 'dili_temporal': 'temporal', 'dili_cluster': 'cluster_out'}[key]
-    CONFIG[key] = Setting(key, 'DILI', label, RELEASE_DILI, DILI_VALID_DIR / f'{valid_split}_HistGB_locked_calibrated_predictions.csv', None, th_spec, th_sens, u80, qhat, 'precomputed')
+    CONFIG[key] = Setting(key, 'DILI', label, RELEASE_DILI, DILI_VALID_DIR / f'{valid_split.replace("_","")}HistGBlockedcalibratedpredictions.csv', None, th_spec, th_sens, u80, qhat, 'precomputed')
 for key, label, assay, split, th_spec, th_sens, u80, qhat in [('tox_nrar_scaffold', 'Tox21 NR-AR scaffold', 'nrar', 'scaffold', 0.0654, 0.0063, 0.174631, 0.055), ('tox_nrar_cluster', 'Tox21 NR-AR cluster-out', 'nrar', 'cluster_out', 0.0752, 0.013, 0.192243, 0.0633), ('tox_nrer_scaffold', 'Tox21 NR-ER scaffold', 'nrer', 'scaffold', 0.226, 0.0348, 0.545201, 0.546), ('tox_nrer_cluster', 'Tox21 NR-ER cluster-out', 'nrer', 'cluster_out', 0.1783, 0.0572, 0.485284, 0.7208)]:
-    base = CROSS / f'tox21_{assay}' / 'predictions'
-    CONFIG[key] = Setting(key, 'Tox21', label, base / f'{split}_HistGB_locked_calibrated_test.csv', base / f'{split}_HistGB_locked_calibrated_valid.csv', base / f'ad_features_{split}.csv', th_spec, th_sens, u80, qhat, 'precomputed')
+    base = CROSS / f'tox21{assay}' / 'predictions'
+    CONFIG[key] = Setting(key, 'Tox21', label, base / f'{split.replace("_","")}HistGBlockedcalibratedtest.csv', base / f'{split.replace("_","")}HistGBlockedcalibratedvalid.csv', base / f'adfeatures{split.replace("_","")}.csv', th_spec, th_sens, u80, qhat, 'precomputed')
 for key, label, project in [('nasa_kc1', 'NASA KC1', 'kc1_internal'), ('nasa_pc1', 'NASA PC1', 'kc1_pc1'), ('nasa_jm1', 'NASA JM1', 'kc1_jm1'), ('nasa_kc2', 'NASA KC2', 'kc1_kc2')]:
     base = NASA_PRED / 'predictions'
-    CONFIG[key] = Setting(key, 'NASA', label, base / f'{project}_HistGB_locked_calibrated_test.csv', base / f'{project}_HistGB_locked_calibrated_valid.csv', base / f'ad_features_{project}.csv', 0.4354, 0.0512, 0.760856, 0.6902, 'precomputed')
+    CONFIG[key] = Setting(key, 'NASA', label, base / f'{project.replace("_","")}HistGBlockedcalibratedtest.csv', base / f'{project.replace("_","")}HistGBlockedcalibratedvalid.csv', base / f'adfeatures{project.replace("_","")}.csv', 0.4354, 0.0512, 0.760856, 0.6902, 'precomputed')
 
 def _logit(p: np.ndarray, eps: float=1e-12) -> np.ndarray:
     p = np.clip(p, eps, 1 - eps)
@@ -85,7 +85,7 @@ def calibrate(s: np.ndarray, y: np.ndarray, method: str) -> np.ndarray:
 
 def _load_dili(key: str) -> dict:
     valid_split = 'scaffold' if key == 'dili_external' else {'dili_scaffold': 'scaffold', 'dili_temporal': 'temporal', 'dili_cluster': 'cluster_out'}[key]
-    f = DILI_VALID_DIR / f'{valid_split}_HistGB_locked_calibrated_predictions.csv'
+    f = DILI_VALID_DIR / f'{valid_split.replace("_","")}HistGBlockedcalibratedpredictions.csv'
     v = pd.read_csv(f).rename(columns={'raw_score': 'raw', 'calibrated_score': 'cal'})
     v = v[['sample_id', 'y_true', 'raw', 'cal']].copy()
     v['ood'] = False

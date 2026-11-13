@@ -130,7 +130,7 @@ for sn in ['scaffold', 'temporal', 'cluster_out']:
             d['split'] = sn
             d['fold_role'] = 'test' if role == 'test' else 'valid' if role == 'valid' else 'train'
             dili_data[f'{sn}_{role}'] = d
-comp_master = ROOT / 'data_curated' / 'compounds' / 'compound_master.csv'
+comp_master = ROOT / 'data_curated' / 'compounds' / 'compoundmaster.csv'
 smiles_map = {}
 if comp_master.exists():
     cm = pd.read_csv(comp_master)
@@ -169,7 +169,7 @@ for model_name, cfg in P0_MODELS.items():
         print(f'  {model_name}: no training scripts found in {len(py_files)} py files')
     retraining_log.append({'model_name': model_name, 'status': 'feasibility_assessed', 'reproduction_class': 'A' if model_name == 'InterDILI' else 'B', 'notes': f'Model code available; {len(py_files)} Python files detected.' + (' Requires RDKit descriptor extraction from DILI-TRUST data.' if model_name == 'InterDILI' else ' Requires descriptor reconstruction + stacking ensemble with GA simplification.' if model_name == 'StackDILI' else ' Requires fingerprints + physchem; PK/proxy features partially available.')})
 df_retrain_log = pd.DataFrame(retraining_log)
-df_retrain_log.to_csv(TMP125 / 'retraining/training_log.csv', index=False)
+df_retrain_log.to_csv(TMP125 / 'retraining/traininglog.csv', index=False)
 print('\n--- Part 7: Generate Literature Model Benchmark Summaries ---')
 class_summary = f'# Stage 12.5 Literature Model Classification Summary\n\n**Generated:** {NOW}\n\nModel Classification\n'
 for _, r in df_audit.iterrows():
